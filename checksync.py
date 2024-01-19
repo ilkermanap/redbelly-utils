@@ -1,20 +1,23 @@
 import os
 import sys
-from redbelly import RedBellyRPC
+from redbelly import RedBellyRPC, Record
 import traceback as tb
 
 
 if __name__ == "__main__":
     if len(sys.argv) == 2:
         try:
-            master = RedBellyRPC()
-            mynode = RedBellyRPC(url=sys.argv[1])
-            master.report()
-            mynode.report()    
+            logger = Record()
+            master = RedBellyRPC(db=logger)
+            mynode = RedBellyRPC(url=sys.argv[1], db=logger)
+            master.log()
+            mynode.log()
+            master.report(master.height)
+            mynode.report(master.height)
             diff = master - mynode
             print("\n")
             if diff == 0:
-                print(f"Your node is in sync with {main} at block number {masterblock}")
+                print(f"Your node is in sync with {master.url} at block number {master.height}")
             if diff > 0:
                 print(f"Your node {mynode.url} is behind {diff} blocks from {master.url}" )
         except:
@@ -28,7 +31,4 @@ Please provide your RPC url as parameter. Sample:
 
         python3 checksync.py https://myredbellynode.example.com:8545
         """)
-        
-            
-        
-        
+
