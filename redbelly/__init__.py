@@ -13,13 +13,13 @@ template = """curl -k -s --location  BBBB --header 'Content-Type: application/js
 }'
 """
 
-
 class RedBellyRPC:
     def __init__(self, url=None):
         if url is None:
             self.url = testnet
         else:
             self.url = url
+        self.height = self.lastBlock()
 
     def lastBlock(self):
         command = template.replace("BBBB", self.url)
@@ -27,3 +27,10 @@ class RedBellyRPC:
         content = process.read()
         return int(json.loads(content)['result'],0)
 
+    def report(self):
+        print("-"*50)
+        print("URL          : ", self.url)
+        print("Block Height : ", self.height)
+
+    def __sub__(self, other):
+        return self.height - other.height

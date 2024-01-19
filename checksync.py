@@ -9,9 +9,12 @@ if __name__ == "__main__":
         try:
             master = RedBellyRPC()
             mynode = RedBellyRPC(url=sys.argv[1])
-            diff = master.lastBlock() - mynode.lastBlock()
+            master.report()
+            mynode.report()    
+            diff = master - mynode
+            print("\n")
             if diff == 0:
-                print("Your node is in sync with ", main)
+                print(f"Your node is in sync with {main} at block number {masterblock}")
             if diff > 0:
                 print(f"Your node {mynode.url} is behind {diff} blocks from {master.url}" )
         except:
