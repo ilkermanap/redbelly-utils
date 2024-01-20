@@ -52,9 +52,13 @@ class Record:
         urlspeed = self.speed(url)
         urlheight = self.height(url)
         diff = targetheight - urlheight
-        synctime = diff / urlspeed
-        return str(timedelta(seconds=synctime))
-    
+        try:
+            synctime = diff / urlspeed
+            return str(timedelta(seconds=synctime))
+        except:
+            return 0
+
+        
 class RedBellyRPC:
     def __init__(self, url=None, db=None):
         if url is None:
