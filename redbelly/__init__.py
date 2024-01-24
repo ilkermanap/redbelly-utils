@@ -1,4 +1,6 @@
 import os
+from subprocess import PIPE, Popen
+import time
 import json
 import sqlite3
 from datetime import datetime, timedelta
@@ -35,8 +37,20 @@ class Record:
         date = datetime.now().timestamp()
         height = rpcobject.height
         cursor = self.con.cursor()
-        cursor.execute("INSERT INTO redbelly values(?,?,?)", (url, date, height))
-        self.con.commit()
+        records = cursor.execute("SELECT * FROM redbelly where url = ? order by date asc", (url,)).fetchall()
+        if len(records) == 0:
+            print(f"This is the first check for {url}. I will wait for 10 seconds and check again")
+            cursor.execute("INSERT INTO redbelly values(?,?,?)", (url, date, height))
+            self.con.commit()
+            time.sleep(10)
+            cursor = self.con.cursor()
+            date = datetime.now().timestamp()
+            height = rpcobject.lastBlock()
+            cursor.execute("INSERT INTO redbelly values(?,?,?)", (url, date, height))
+            self.con.commit()
+        else:
+            cursor.execute("INSERT INTO redbelly values(?,?,?)", (url, date, height))
+            self.con.commit()
 
     def speed(self, url):
         cursor = self.con.cursor()
@@ -46,6 +60,7 @@ class Record:
             numblock = records[-1][2] - records[0][2]
             return numblock / interval
         else:
+            #Should not be in here
             return 0
 
     def timetosync(self,url, targetheight):
@@ -73,8 +88,9 @@ class RedBellyRPC:
         
     def lastBlock(self):
         command = template.replace("BBBB", self.url)
-        process = os.popen(command)
-        content = process.read()
+        process = Popen(command, shell=True, stdout=PIPE, stderr=PIPE)
+        #TODO: Check the content of err for errors coming from curl
+        content, err = process.communicate()
         return int(json.loads(content)['result'],0)
 
     def report(self, targetheight):
