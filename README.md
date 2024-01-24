@@ -60,7 +60,7 @@ You can clone this repository using:
 Using your command line, please go to the directory where you cloned/unzipped the application.
 
 Run the command as shown below. At first, application will query the RPC's two times, to have enough information to calculate the sync speed.
-
+```
    ilker@t440s:~/src/redbelly-utils$ python3 checksync.py https://redbelly.manap.se:8545
    This is the first check for https://rbn-gcp-australia-southeast1-a-0-b-v2.devnet.redbelly.network:8545. I will wait for 10 seconds and check again
    This is the first check for https://redbelly.manap.se:8545. I will wait for 10 seconds and check again  
@@ -74,7 +74,7 @@ Run the command as shown below. At first, application will query the RPC's two t
    Block Height :  42105
    Sync Speed   :  0.0
    Time to sync :  0
-
+```
 
    Your node is in sync with https://rbn-gcp-australia-southeast1-a-0-b-v2.devnet.redbelly.network:8545 at block number 42105
 
