@@ -5,7 +5,9 @@ import json
 import sqlite3
 from datetime import datetime, timedelta
 
-testnet = "https://rbn-gcp-australia-southeast1-a-0-b-v2.devnet.redbelly.network:8545"
+devnet = "https://rbn-gcp-australia-southeast1-a-0-b-v2.devnet.redbelly.network:8545"
+
+testnet = "https://governors.testnet.redbelly.network"
 
 template = """curl -k -s --location  BBBB --header 'Content-Type: application/json' --data '{             
   "jsonrpc":"2.0",
